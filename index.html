@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RentByMe — Vacant houses across Ruiru, Juja & Kimbo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16241C;
+    --ink-soft:#2C3A31;
+    --sand:#EFE6D2;
+    --sand-deep:#E4D8BC;
+    --paper:#FAF7EF;
+    --clay:#B8451F;
+    --clay-dark:#8F3417;
+    --sage:#71906B;
+    --sage-dark:#526B4E;
+    --gold:#D3A22C;
+    --line: rgba(22,36,28,0.14);
+    --shadow: 0 20px 50px rgba(22,36,28,0.14);
+    --radius-lg: 26px;
+    --radius-sm: 10px;
+    --serif: 'Fraunces', serif;
+    --sans: 'Inter', sans-serif;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:var(--sans);
+    color:var(--ink);
+    background:var(--paper);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  img,svg{display:block; max-width:100%;}
+  a{color:inherit; text-decoration:none;}
+  button{font-family:inherit; cursor:pointer; border:none; background:none;}
+  ul{list-style:none;}
+  .wrap{max-width:1180px; margin:0 auto; padding:0 32px;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important;}
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(250,247,239,0.88);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:20px 32px;
+    max-width:1180px; margin:0 auto;
+  }
+  .logo{
+    font-family:var(--serif); font-weight:600; font-size:1.5rem;
+    letter-spacing:-0.01em; color:var(--ink); display:flex; align-items:center; gap:9px;
+  }
+  .logo .dot{width:9px; height:9px; border-radius:50%; background:var(--clay); display:inline-block; transform:translateY(-1px);}
+  .nav-links{display:flex; align-items:center; gap:36px;}
+  .nav-links a{
+    font-size:0.95rem; color:var(--ink-soft); position:relative; padding:4px 0;
+    transition:color .2s;
+  }
+  .nav-links a:hover{color:var(--clay);}
+  .nav-cta{
+    background:var(--ink); color:var(--paper); padding:11px 22px;
+    border-radius:100px; font-size:0.9rem; font-weight:600;
+    transition:background .2s, transform .2s;
+  }
+  .nav-cta:hover{background:var(--clay); transform:translateY(-1px);}
+  .burger{display:none; flex-direction:column; gap:5px; width:26px;}
+  .burger span{height:2px; background:var(--ink); border-radius:2px;}
+  .mobile-menu{display:none;}
+
+  @media (max-width: 860px){
+    .nav-links, .nav-cta.desktop-only{display:none;}
+    .burger{display:flex;}
+    .mobile-menu{
+      display:none; flex-direction:column; gap:2px; padding:12px 32px 24px;
+      border-top:1px solid var(--line);
+    }
+    .mobile-menu.open{display:flex;}
+    .mobile-menu a{padding:12px 0; font-size:1rem; border-bottom:1px solid var(--line); color:var(--ink-soft);}
+    .mobile-menu .nav-cta{margin-top:14px; text-align:center;}
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative; overflow:hidden;
+    padding:76px 0 60px;
+    background:
+      radial-gradient(ellipse 900px 500px at 82% -10%, rgba(211,162,44,0.18), transparent 60%),
+      var(--paper);
+  }
+  .hero-grid{
+    display:grid; grid-template-columns:1.05fr 0.95fr; gap:56px; align-items:center;
+  }
+  .eyebrow-row{
+    display:flex; align-items:center; gap:10px; margin-bottom:22px;
+    font-size:0.88rem; color:var(--sage-dark); font-weight:500;
+  }
+  .eyebrow-row .rule{width:30px; height:1px; background:var(--sage);}
+  h1.hero-title{
+    font-family:var(--serif); font-weight:500; font-size:clamp(2.6rem, 5vw, 4rem);
+    line-height:1.04; letter-spacing:-0.02em; color:var(--ink);
+    max-width:11.5ch;
+  }
+  h1.hero-title em{font-style:italic; font-weight:400; color:var(--clay);}
+  .hero-sub{
+    margin-top:22px; font-size:1.13rem; color:var(--ink-soft); max-width:44ch; line-height:1.6;
+  }
+
+  .search-panel{
+    margin-top:38px; background:var(--paper); border:1px solid var(--line);
+    border-radius:var(--radius-lg); padding:22px; box-shadow:var(--shadow);
+  }
+  .search-row{display:grid; grid-template-columns:1fr 1fr 1fr auto; gap:12px;}
+  .field{display:flex; flex-direction:column; gap:6px;}
+  .field label{font-size:0.75rem; color:var(--sage-dark); font-weight:600;}
+  .field select, .field input{
+    font-family:var(--sans); font-size:0.95rem; padding:11px 12px;
+    border:1px solid var(--line); border-radius:var(--radius-sm); background:var(--sand);
+    color:var(--ink);
+  }
+  .field select:focus, .field input:focus{outline:2px solid var(--clay); outline-offset:1px;}
+  .search-btn{
+    align-self:end; background:var(--clay); color:var(--paper); padding:12px 24px;
+    border-radius:var(--radius-sm); font-weight:600; font-size:0.95rem;
+    transition:background .2s;
+    white-space:nowrap;
+  }
+  .search-btn:hover{background:var(--clay-dark);}
+
+  @media (max-width:640px){
+    .search-row{grid-template-columns:1fr;}
+  }
+
+  .hero-art{position:relative; height:100%; min-height:380px; border-radius:var(--radius-lg); overflow:hidden; box-shadow:var(--shadow);}
+  .hero-art img{width:100%; height:100%; object-fit:cover; min-height:380px;}
+
+  .trust-strip{
+    margin-top:44px; display:flex; gap:36px; flex-wrap:wrap;
+  }
+  .trust-item{}
+  .trust-item .num{font-family:var(--serif); font-size:1.9rem; color:var(--ink); font-weight:500;}
+  .trust-item .lbl{font-size:0.82rem; color:var(--ink-soft);}
+
+  @media (max-width:860px){
+    .hero-grid{grid-template-columns:1fr;}
+    .hero-art{order:-1; min-height:260px;}
+    .hero-art img{min-height:260px;}
+  }
+
+  /* ---------- Locations ---------- */
+  .locations{padding:88px 0; background:var(--ink); color:var(--paper);}
+  .section-head{display:flex; justify-content:space-between; align-items:flex-end; gap:24px; margin-bottom:44px; flex-wrap:wrap;}
+  .section-head h2{
+    font-family:var(--serif); font-weight:500; font-size:clamp(1.9rem,3.4vw,2.6rem);
+    letter-spacing:-0.01em;
+  }
+  .locations .section-head p{max-width:38ch; color:rgba(250,247,239,0.68); font-size:1rem;}
+
+  .loc-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
+  .loc-card{
+    background:rgba(250,247,239,0.04); border:1px solid rgba(250,247,239,0.14);
+    border-radius:var(--radius-lg); overflow:hidden; position:relative;
+    transition:background .25s, border-color .25s, transform .25s;
+    display:flex; flex-direction:column; text-align:left;
+  }
+  .loc-card:hover{background:rgba(250,247,239,0.08); border-color:rgba(250,247,239,0.3); transform:translateY(-3px);}
+  .loc-card .loc-photo{width:100%; aspect-ratio:16/10; overflow:hidden;}
+  .loc-card .loc-photo img{width:100%; height:100%; object-fit:cover;}
+  .loc-card .loc-body{padding:26px;}
+  .loc-card h3{font-family:var(--serif); font-size:1.5rem; font-weight:500; margin-bottom:8px;}
+  .loc-card p{color:rgba(250,247,239,0.65); font-size:0.94rem; margin-bottom:18px; line-height:1.55;}
+  .loc-card .loc-meta{
+    display:flex; justify-content:space-between; align-items:center;
+    padding-top:16px; border-top:1px solid rgba(250,247,239,0.14);
+    font-size:0.85rem; color:var(--gold);
+  }
+  @media (max-width:860px){.loc-grid{grid-template-columns:1fr;}}
+
+  /* ---------- Listings ---------- */
+  .listings{padding:88px 0;}
+  .filter-bar{
+    display:flex; gap:10px; margin-bottom:36px; flex-wrap:wrap;
+  }
+  .filter-chip{
+    padding:9px 18px; border-radius:100px; border:1px solid var(--line);
+    font-size:0.88rem; color:var(--ink-soft); background:var(--paper);
+    transition:all .2s;
+  }
+  .filter-chip.active, .filter-chip:hover{background:var(--ink); color:var(--paper); border-color:var(--ink);}
+
+  .listing-grid{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:24px;
+  }
+  .listing-grid .card:nth-child(1){grid-column:span 2;}
+  .listing-grid .card:nth-child(4){grid-column:span 2;}
+
+  @media (max-width:940px){
+    .listing-grid{grid-template-columns:repeat(2,1fr);}
+    .listing-grid .card:nth-child(1), .listing-grid .card:nth-child(4){grid-column:span 2;}
+  }
+  @media (max-width:640px){
+    .listing-grid{grid-template-columns:1fr;}
+    .listing-grid .card:nth-child(1), .listing-grid .card:nth-child(4){grid-column:span 1;}
+  }
+
+  .card{
+    border:1px solid var(--line); border-radius:var(--radius-lg); overflow:hidden;
+    background:var(--paper); transition:transform .25s, box-shadow .25s;
+    display:flex; flex-direction:column;
+  }
+  .card:hover{transform:translateY(-4px); box-shadow:var(--shadow);}
+  .card-art{
+    aspect-ratio:16/10; position:relative; overflow:hidden; background:var(--sand);
+  }
+  .card-art img{width:100%; height:100%; object-fit:cover; transition:transform .4s;}
+  .card:hover .card-art img{transform:scale(1.05);}
+  .card:nth-child(1) .card-art{aspect-ratio:16/8;}
+  .card-tag{
+    position:absolute; top:14px; left:14px; background:var(--paper); color:var(--ink);
+    font-size:0.76rem; font-weight:600; padding:6px 12px; border-radius:100px;
+    z-index:2;
+  }
+  .card-price{
+    position:absolute; bottom:14px; left:14px; background:rgba(22,36,28,0.88); color:var(--paper);
+    font-family:var(--serif); font-size:1.05rem; padding:7px 14px; border-radius:10px; z-index:2;
+  }
+  .card-price span{font-size:0.72rem; font-weight:400; opacity:0.75; font-family:var(--sans);}
+  .card-body{padding:20px 22px 22px; display:flex; flex-direction:column; gap:10px; flex:1;}
+  .card-body h3{font-family:var(--serif); font-size:1.25rem; font-weight:500;}
+  .card-loc{font-size:0.85rem; color:var(--sage-dark); font-weight:500;}
+  .card-meta{display:flex; gap:14px; font-size:0.85rem; color:var(--ink-soft); margin-top:2px;}
+  .card-desc{font-size:0.88rem; color:var(--ink-soft); line-height:1.55; margin-top:2px;}
+  .card-foot{
+    margin-top:auto; padding-top:14px; display:flex; justify-content:space-between; align-items:center;
+  }
+  .enquire-btn{
+    font-size:0.88rem; font-weight:600; color:var(--clay); display:flex; align-items:center; gap:6px;
+    transition:gap .2s;
+  }
+  .enquire-btn:hover{gap:10px;}
+  .empty-state{
+    grid-column:1/-1; text-align:center; padding:60px 20px; color:var(--ink-soft);
+    font-size:0.98rem; display:none;
+  }
+
+  /* ---------- How it works ---------- */
+  .how{background:var(--sand); padding:88px 0;}
+  .how-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:30px; margin-top:44px;}
+  .how-step{position:relative; padding-left:0;}
+  .how-num{
+    font-family:var(--serif); font-size:0.95rem; color:var(--clay); font-weight:600;
+    margin-bottom:16px; display:flex; align-items:center; gap:10px;
+  }
+  .how-num .ln{width:22px; height:1px; background:var(--clay);}
+  .how-step h3{font-family:var(--serif); font-size:1.35rem; font-weight:500; margin-bottom:10px;}
+  .how-step p{color:var(--ink-soft); font-size:0.95rem; line-height:1.6; max-width:32ch;}
+  @media (max-width:860px){.how-grid{grid-template-columns:1fr; gap:38px;}}
+
+  /* ---------- Landlord CTA ---------- */
+  .landlord{padding:100px 0;}
+  .landlord-panel{
+    background:var(--clay); color:var(--paper); border-radius:32px;
+    padding:64px 56px; display:grid; grid-template-columns:1.2fr 0.8fr; gap:40px; align-items:center;
+    position:relative; overflow:hidden;
+  }
+  .landlord-panel h2{
+    font-family:var(--serif); font-weight:500; font-size:clamp(1.9rem,3.6vw,2.5rem);
+    line-height:1.15; max-width:14ch; letter-spacing:-0.01em;
+  }
+  .landlord-panel p{margin-top:16px; font-size:1.02rem; opacity:0.9; max-width:42ch; line-height:1.6;}
+  .landlord-form{
+    background:var(--paper); color:var(--ink); border-radius:20px; padding:26px;
+    display:flex; flex-direction:column; gap:12px;
+  }
+  .landlord-form input, .landlord-form select{
+    padding:12px 14px; border:1px solid var(--line); border-radius:var(--radius-sm);
+    font-family:var(--sans); font-size:0.92rem; background:var(--sand);
+  }
+  .landlord-form button{
+    background:var(--ink); color:var(--paper); padding:13px; border-radius:var(--radius-sm);
+    font-weight:600; font-size:0.94rem; margin-top:4px; transition:background .2s;
+  }
+  .landlord-form button:hover{background:#0e1712;}
+  .form-msg{font-size:0.86rem; margin-top:2px; display:none;}
+  .form-msg.show{display:block;}
+  @media (max-width:860px){.landlord-panel{grid-template-columns:1fr; padding:44px 26px;}}
+
+  /* ---------- Footer ---------- */
+  footer{background:var(--ink); color:rgba(250,247,239,0.7); padding:64px 0 32px;}
+  .footer-grid{display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:40px; padding-bottom:44px; border-bottom:1px solid rgba(250,247,239,0.14);}
+  .footer-brand .logo{color:var(--paper); margin-bottom:14px;}
+  .footer-brand p{font-size:0.92rem; line-height:1.6; max-width:32ch; color:rgba(250,247,239,0.6);}
+  .footer-col h4{font-size:0.85rem; color:var(--paper); margin-bottom:16px; font-weight:600;}
+  .footer-col a, .footer-col li{display:block; font-size:0.9rem; margin-bottom:11px; color:rgba(250,247,239,0.62); transition:color .2s;}
+  .footer-col a:hover{color:var(--gold);}
+  .footer-bottom{padding-top:26px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; font-size:0.82rem; color:rgba(250,247,239,0.45);}
+  @media (max-width:860px){.footer-grid{grid-template-columns:1fr 1fr;}}
+  @media (max-width:520px){.footer-grid{grid-template-columns:1fr;}}
+
+  /* ---------- Modal ---------- */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(22,36,28,0.55); backdrop-filter:blur(3px);
+    display:none; align-items:center; justify-content:center; z-index:100; padding:20px;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--paper); border-radius:24px; padding:32px; max-width:420px; width:100%;
+    box-shadow:var(--shadow);
+  }
+  .modal h3{font-family:var(--serif); font-size:1.4rem; font-weight:500; margin-bottom:6px;}
+  .modal .modal-sub{font-size:0.9rem; color:var(--ink-soft); margin-bottom:20px;}
+  .modal input{
+    width:100%; padding:12px 14px; border:1px solid var(--line); border-radius:var(--radius-sm);
+    background:var(--sand); font-family:var(--sans); font-size:0.92rem; margin-bottom:12px;
+  }
+  .modal-actions{display:flex; gap:10px; margin-top:6px;}
+  .modal-actions button{padding:12px 20px; border-radius:var(--radius-sm); font-weight:600; font-size:0.9rem;}
+  .btn-send{background:var(--clay); color:var(--paper); flex:1; transition:background .2s;}
+  .btn-send:hover{background:var(--clay-dark);}
+  .btn-cancel{background:var(--sand); color:var(--ink);}
+  .modal-success{display:none; text-align:center; padding:10px 0;}
+  .modal-success.show{display:block;}
+  .modal-success .check{
+    width:48px; height:48px; border-radius:50%; background:var(--sage); margin:0 auto 16px;
+    display:flex; align-items:center; justify-content:center;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="nav">
+    <a href="#top" class="logo"><span class="dot"></span>RentByMe</a>
+    <div class="nav-links">
+      <a href="#listings">Listings</a>
+      <a href="#how">How it works</a>
+      <a href="#landlords">For landlords</a>
+      <a href="#footer">Contact</a>
+    </div>
+    <a href="#listings" class="nav-cta desktop-only">Find a house</a>
+    <button class="burger" id="burgerBtn" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#listings">Listings</a>
+    <a href="#how">How it works</a>
+    <a href="#landlords">For landlords</a>
+    <a href="#footer">Contact</a>
+    <a href="#listings" class="nav-cta">Find a house</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow-row"><span class="rule"></span>Ruiru · Juja · Kimbo</div>
+        <h1 class="hero-title">Find a vacant house without the runaround</h1>
+        <p class="hero-sub">RentByMe connects you straight to landlords and agencies with genuinely vacant houses along the Thika corridor — no agent chains, no ghost listings, no wasted viewings.</p>
+
+        <div class="search-panel">
+          <div class="search-row">
+            <div class="field">
+              <label for="locSelect">Area</label>
+              <select id="locSelect">
+                <option value="all">Any area</option>
+                <option value="ruiru">Ruiru</option>
+                <option value="juja">Juja</option>
+                <option value="kimbo">Kimbo</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="typeSelect">House type</label>
+              <select id="typeSelect">
+                <option value="all">Any type</option>
+                <option value="bedsitter">Bedsitter</option>
+                <option value="studio">Studio</option>
+                <option value="1br">1 bedroom</option>
+                <option value="2br">2 bedroom</option>
+                <option value="3br">3 bedroom</option>
+                <option value="mansion">Mansion</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="budgetSelect">Budget (KES/mo)</label>
+              <select id="budgetSelect">
+                <option value="all">Any budget</option>
+                <option value="15000">Under 15,000</option>
+                <option value="25000">Under 25,000</option>
+                <option value="45000">Under 45,000</option>
+                <option value="999999">Above 100,000</option>
+              </select>
+            </div>
+            <button class="search-btn" id="searchBtn">Search houses</button>
+          </div>
+        </div>
+
+        <div class="trust-strip">
+          <div class="trust-item"><div class="num">126</div><div class="lbl">verified vacant houses</div></div>
+          <div class="trust-item"><div class="num">40+</div><div class="lbl">landlords &amp; agencies</div></div>
+          <div class="trust-item"><div class="num">3</div><div class="lbl">towns covered</div></div>
+        </div>
+      </div>
+
+      <div class="hero-art">
+        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=80" alt="Modern two-storey maisonette with a paved driveway" loading="eager">
+      </div>
+    </div>
+  </section>
+
+  <!-- LOCATIONS -->
+  <section class="locations" id="locations">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Three towns, one search</h2>
+        <p>Each corner of the corridor has its own rhythm — pick the one that fits how you live.</p>
+      </div>
+      <div class="loc-grid">
+        <button class="loc-card" data-loc="ruiru">
+          <div class="loc-photo"><img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=700&q=80" alt="Gated estate townhouses in Ruiru" loading="lazy"></div>
+          <div class="loc-body">
+            <h3>Ruiru</h3>
+            <p>Tatu City's front door — new estates, industrial jobs nearby, and the fastest-growing rental stock on the corridor.</p>
+            <div class="loc-meta"><span>52 vacant houses</span><span>→</span></div>
+          </div>
+        </button>
+        <button class="loc-card" data-loc="juja">
+          <div class="loc-photo"><img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=700&q=80" alt="Student apartment block near a university campus" loading="lazy"></div>
+          <div class="loc-body">
+            <h3>Juja</h3>
+            <p>Campus energy from JKUAT next door — bedsitters and shared houses that turn over fast each semester.</p>
+            <div class="loc-meta"><span>48 vacant houses</span><span>→</span></div>
+          </div>
+        </button>
+        <button class="loc-card" data-loc="kimbo">
+          <div class="loc-photo"><img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=700&q=80" alt="Quiet residential bungalow street" loading="lazy"></div>
+          <div class="loc-body">
+            <h3>Kimbo</h3>
+            <p>Quiet streets off the Thika highway — family-sized maisonettes for people done with the hustle of town.</p>
+            <div class="loc-meta"><span>26 vacant houses</span><span>→</span></div>
+          </div>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- LISTINGS -->
+  <section class="listings" id="listings">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Open for viewing this week</h2>
+        <p>Every listing here comes straight from the landlord or their agency — updated the day it's vacated.</p>
+      </div>
+
+      <div class="filter-bar" id="filterBar">
+        <button class="filter-chip active" data-filter="all">All areas</button>
+        <button class="filter-chip" data-filter="ruiru">Ruiru</button>
+        <button class="filter-chip" data-filter="juja">Juja</button>
+        <button class="filter-chip" data-filter="kimbo">Kimbo</button>
+      </div>
+
+      <div class="listing-grid" id="listingGrid">
+        <!-- Cards injected by JS -->
+      </div>
+      <p class="empty-state" id="emptyState">No houses match that filter right now — try another area or check back soon.</p>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how" id="how">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>From search to keys in hand</h2>
+      </div>
+      <div class="how-grid">
+        <div class="how-step">
+          <div class="how-num"><span class="ln"></span>01</div>
+          <h3>Search by town</h3>
+          <p>Filter by Ruiru, Juja or Kimbo, set your budget, and see only houses that are actually vacant today.</p>
+        </div>
+        <div class="how-step">
+          <div class="how-num"><span class="ln"></span>02</div>
+          <h3>Talk to the landlord directly</h3>
+          <p>Send an enquiry and get connected to the person who owns or manages the house — not a chain of brokers.</p>
+        </div>
+        <div class="how-step">
+          <div class="how-num"><span class="ln"></span>03</div>
+          <h3>View, agree, move in</h3>
+          <p>Book a viewing, agree terms on the spot, and move into a house you've actually seen and understood.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LANDLORD CTA -->
+  <section class="landlord" id="landlords">
+    <div class="wrap">
+      <div class="landlord-panel">
+        <div>
+          <h2>Have a house sitting empty?</h2>
+          <p>List it on RentByMe and reach tenants across Ruiru, Juja and Kimbo who are searching right now — no listing fees while we're growing the platform.</p>
+        </div>
+        <form class="landlord-form" id="landlordForm">
+          <input type="text" placeholder="Your name" id="llName" required>
+          <input type="tel" placeholder="Phone number" id="llPhone" required>
+          <select id="llLoc" required>
+            <option value="" disabled selected>House location</option>
+            <option>Ruiru</option>
+            <option>Juja</option>
+            <option>Kimbo</option>
+          </select>
+          <button type="submit">List my house</button>
+          <p class="form-msg" id="llMsg"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer id="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#top" class="logo"><span class="dot"></span>RentByMe</a>
+        <p>A direct line between people looking for a home and the landlords and agencies who have one — starting with Ruiru, Juja and Kimbo.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Explore</h4>
+        <a href="#listings">Listings</a>
+        <a href="#locations">Areas</a>
+        <a href="#how">How it works</a>
+      </div>
+      <div class="footer-col">
+        <h4>Landlords</h4>
+        <a href="#landlords">List a house</a>
+        <a href="#">Pricing</a>
+        <a href="#">Agency accounts</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="tel:+254700000000">+254 700 000 000</a>
+        <a href="mailto:hello@rentbyme.co.ke">hello@rentbyme.co.ke</a>
+        <a href="#">Ruiru, Kiambu County</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 RentByMe. All rights reserved.</span>
+      <span>Built for the Thika corridor.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ENQUIRY MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div id="modalForm">
+      <h3 id="modalTitle">Enquire about this house</h3>
+      <p class="modal-sub" id="modalSub">The landlord will get your details directly.</p>
+      <input type="text" placeholder="Your name" id="enqName">
+      <input type="tel" placeholder="Phone number" id="enqPhone">
+      <div class="modal-actions">
+        <button class="btn-cancel" id="modalCancel">Cancel</button>
+        <button class="btn-send" id="modalSend">Send enquiry</button>
+      </div>
+    </div>
+    <div class="modal-success" id="modalSuccess">
+      <div class="check">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="var(--paper)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h3 style="text-align:center;">Enquiry sent</h3>
+      <p class="modal-sub" style="text-align:center;">The landlord will reach out on the number you shared, usually within a day.</p>
+      <button class="btn-send" id="modalClose" style="width:100%; margin-top:10px;">Done</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // -------- Listing data (real photo URLs by house type) --------
+  const listings = [
+    {
+      id: 1, loc: "ruiru", locName: "Ruiru", type: "maisonette", typeLabel: "3 bed maisonette",
+      title: "3-bed maisonette, Tatu Vista Estate",
+      price: 42000, beds: 3, baths: 2,
+      desc: "Gated estate off Eastern Bypass, borehole water, dedicated parking bay and a small garden.",
+      img: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=80"
+    },
+    {
+      id: 2, loc: "juja", locName: "Juja", type: "bedsitter", typeLabel: "Bedsitter",
+      title: "Bedsitter, 5 minutes from JKUAT gate",
+      price: 6500, beds: 0, baths: 1,
+      desc: "Furnished-ready, tiled throughout, backup water tank — popular with students and young graduates.",
+      img: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=900&q=80"
+    },
+    {
+      id: 3, loc: "kimbo", locName: "Kimbo", type: "2br", typeLabel: "2 bedroom",
+      title: "2 bedroom bungalow off Kimbo Road",
+      price: 18000, beds: 2, baths: 1,
+      desc: "Quiet cul-de-sac, own compound, close to Kimbo primary and the Thika Road matatu stage.",
+      img: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=900&q=80"
+    },
+    {
+      id: 4, loc: "ruiru", locName: "Ruiru", type: "1br", typeLabel: "1 bedroom",
+      title: "1 bedroom apartment, Ruiru town centre",
+      price: 15000, beds: 1, baths: 1,
+      desc: "Third floor unit with balcony, lift access, walking distance to Ruiru railway station.",
+      img: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=900&q=80"
+    },
+    {
+      id: 5, loc: "juja", locName: "Juja", type: "2br", typeLabel: "2 bedroom",
+      title: "2 bedroom flat, Juja Farm road",
+      price: 22000, beds: 2, baths: 1,
+      desc: "Family-friendly block, secure perimeter wall, ample water pressure and a paved courtyard.",
+      img: "https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&w=900&q=80"
+    },
+    {
+      id: 6, loc: "kimbo", locName: "Kimbo", type: "studio", typeLabel: "Studio",
+      title: "Studio unit near Kimbo shopping centre",
+      price: 8500, beds: 0, baths: 1,
+      desc: "Open-plan studio with a kitchenette nook, shared compound, five-minute walk to the highway footbridge.",
+      img: "https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=900&q=80"
+    },
+    {
+      id: 7, loc: "ruiru", locName: "Ruiru", type: "mansion", typeLabel: "Mansion",
+      title: "5-bed mansion, Kamakis Runda-style estate",
+      price: 180000, beds: 5, baths: 5,
+      desc: "Standalone home on a half-acre, staff quarters, double garage, borehole and landscaped grounds.",
+      img: "https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=900&q=80"
+    },
+    {
+      id: 8, loc: "juja", locName: "Juja", type: "1br", typeLabel: "1 bedroom",
+      title: "1 bedroom, Juja South estate",
+      price: 12000, beds: 1, baths: 1,
+      desc: "Newly built block, tiled floors, reliable water and a quiet study-friendly neighbourhood.",
+      img: "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=900&q=80"
+    },
+    {
+      id: 9, loc: "kimbo", locName: "Kimbo", type: "3br", typeLabel: "3 bedroom",
+      title: "3 bedroom maisonette, Kimbo Gardens",
+      price: 38000, beds: 3, baths: 2,
+      desc: "Corner unit with a private yard, DSQ, and easy access to the Kimbo interchange.",
+      img: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=900&q=80"
+    },
+    {
+      id: 10, loc: "ruiru", locName: "Ruiru", type: "studio", typeLabel: "Studio",
+      title: "Studio apartment, Ruiru CBD",
+      price: 9500, beds: 0, baths: 1,
+      desc: "Compact modern studio, secure entry, walking distance to shops, banks and the bus stage.",
+      img: "https://images.unsplash.com/photo-1522771930-78848d9293e8?auto=format&fit=crop&w=900&q=80"
+    },
+    {
+      id: 11, loc: "juja", locName: "Juja", type: "mansion", typeLabel: "Mansion",
+      title: "6-bed mansion, Juja Farm gated community",
+      price: 220000, beds: 6, baths: 6,
+      desc: "Executive home with a swimming pool, home office, backup generator and 24-hour estate security.",
+      img: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=80"
+    },
+    {
+      id: 12, loc: "kimbo", locName: "Kimbo", type: "bedsitter", typeLabel: "Bedsitter",
+      title: "Bedsitter, Kimbo shopping centre road",
+      price: 5500, beds: 0, baths: 1,
+      desc: "Compact and tidy, shared compound, five-minute walk to shops and the highway footbridge.",
+      img: "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=900&q=80"
+    }
+  ];
+
+  const grid = document.getElementById("listingGrid");
+  const emptyState = document.getElementById("emptyState");
+
+  function fmtPrice(p){
+    return "KES " + p.toLocaleString();
+  }
+
+  function render(areaFilter, typeFilter, maxBudget){
+    let filtered = listings;
+    if(areaFilter && areaFilter !== "all"){
+      filtered = filtered.filter(l => l.loc === areaFilter);
+    }
+    if(typeFilter && typeFilter !== "all"){
+      filtered = filtered.filter(l => l.type === typeFilter);
+    }
+    if(maxBudget && maxBudget !== "all"){
+      const budget = Number(maxBudget);
+      filtered = filtered.filter(l => l.price <= budget);
+    }
+
+    grid.innerHTML = "";
+    if(filtered.length === 0){
+      emptyState.style.display = "block";
+      return;
+    }
+    emptyState.style.display = "none";
+    filtered.forEach(l => {
+      const card = document.createElement("article");
+      card.className = "card";
+      const bedsLabel = l.beds === 0 ? l.typeLabel : (l.beds + (l.beds === 1 ? " bed" : " beds"));
+      card.innerHTML = `
+        <div class="card-art">
+          <img src="${l.img}" alt="${l.title}" loading="lazy">
+          <span class="card-tag">${l.locName}</span>
+          <span class="card-price">${fmtPrice(l.price)}<span>/mo</span></span>
+        </div>
+        <div class="card-body">
+          <h3>${l.title}</h3>
+          <div class="card-meta"><span>${bedsLabel}</span><span>${l.baths} bath</span></div>
+          <p class="card-desc">${l.desc}</p>
+          <div class="card-foot">
+            <button class="enquire-btn" data-title="${l.title}">Enquire →</button>
+          </div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  render("all", "all", "all");
+
+  // -------- Filter chips (area) --------
+  const filterBar = document.getElementById("filterBar");
+  let currentType = "all";
+  let currentBudget = "all";
+  filterBar.addEventListener("click", (e) => {
+    const btn = e.target.closest(".filter-chip");
+    if(!btn) return;
+    filterBar.querySelectorAll(".filter-chip").forEach(c => c.classList.remove("active"));
+    btn.classList.add("active");
+    render(btn.dataset.filter, currentType, currentBudget);
+  });
+
+  // -------- Location cards scroll + filter --------
+  document.querySelectorAll(".loc-card").forEach(card => {
+    card.addEventListener("click", () => {
+      const loc = card.dataset.loc;
+      document.getElementById("listings").scrollIntoView({behavior:"smooth"});
+      filterBar.querySelectorAll(".filter-chip").forEach(c => {
+        c.classList.toggle("active", c.dataset.filter === loc);
+      });
+      render(loc, currentType, currentBudget);
+    });
+  });
+
+  // -------- Hero search --------
+  document.getElementById("searchBtn").addEventListener("click", () => {
+    const loc = document.getElementById("locSelect").value;
+    const type = document.getElementById("typeSelect").value;
+    const budget = document.getElementById("budgetSelect").value;
+    currentType = type;
+    currentBudget = budget;
+    document.getElementById("listings").scrollIntoView({behavior:"smooth"});
+    filterBar.querySelectorAll(".filter-chip").forEach(c => {
+      c.classList.toggle("active", c.dataset.filter === loc);
+    });
+    render(loc, type, budget);
+  });
+
+  // -------- Mobile menu --------
+  const burger = document.getElementById("burgerBtn");
+  const mobileMenu = document.getElementById("mobileMenu");
+  burger.addEventListener("click", () => {
+    mobileMenu.classList.toggle("open");
+  });
+  mobileMenu.querySelectorAll("a").forEach(a => {
+    a.addEventListener("click", () => mobileMenu.classList.remove("open"));
+  });
+
+  // -------- Enquiry modal --------
+  const overlay = document.getElementById("modalOverlay");
+  const modalForm = document.getElementById("modalForm");
+  const modalSuccess = document.getElementById("modalSuccess");
+  const modalTitle = document.getElementById("modalTitle");
+
+  grid.addEventListener("click", (e) => {
+    const btn = e.target.closest(".enquire-btn");
+    if(!btn) return;
+    modalTitle.textContent = "Enquire about " + btn.dataset.title;
+    overlay.classList.add("open");
+    modalForm.style.display = "block";
+    modalSuccess.classList.remove("show");
+  });
+
+  document.getElementById("modalCancel").addEventListener("click", closeModal);
+  document.getElementById("modalClose").addEventListener("click", closeModal);
+  overlay.addEventListener("click", (e) => { if(e.target === overlay) closeModal(); });
+
+  function closeModal(){
+    overlay.classList.remove("open");
+    document.getElementById("enqName").value = "";
+    document.getElementById("enqPhone").value = "";
+  }
+
+  document.getElementById("modalSend").addEventListener("click", () => {
+    const name = document.getElementById("enqName").value.trim();
+    const phone = document.getElementById("enqPhone").value.trim();
+    if(!name || !phone){
+      alert("Please add your name and phone number so the landlord can reach you.");
+      return;
+    }
+    modalForm.style.display = "none";
+    modalSuccess.classList.add("show");
+  });
+
+  // -------- Landlord form --------
+  document.getElementById("landlordForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const msg = document.getElementById("llMsg");
+    msg.textContent = "Thanks — we'll be in touch within one business day to list your house.";
+    msg.classList.add("show");
+    e.target.querySelectorAll("input, select").forEach(el => el.value = "");
+  });
+
+})();
+</script>
+
+</body>
+</html>
